@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
+import CenteredContainer from "../containers/CenteredContainer";
+import Loading from "../containers/Loading";
 import { auth } from "../firebase";
 
 const AuthContext = React.createContext();
@@ -10,6 +12,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
+  const [loading, setLoading] = useState(true);
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
@@ -37,6 +40,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
+      setLoading(false);
     });
 
     return unsubscribe;
@@ -51,5 +55,9 @@ export function AuthProvider({ children }) {
     updateEmail,
     updatePassword,
   };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {loading ? <Loading /> : children}
+    </AuthContext.Provider>
+  );
 }
