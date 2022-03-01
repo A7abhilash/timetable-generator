@@ -1,20 +1,11 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React from "react";
 import Cell from "./Cell";
 
 function Table({ table = [[]], setTable }) {
-  //   useEffect(() => {
-  //     setTable([
-  //       ["Day\\Time", "8am-9am", "9am to 10am"],
-  //       ["Monday", "Biology", "Maths"],
-  //       ["Tuesday", "Physics", "Chemistry"],
-  //     ]);
-  //   }, []);
-
   const handleAddNewCol = () => {
     let _table = [...table];
     _table.forEach((row) => row.push(""));
-    console.log(_table);
+    // console.log(_table);
     setTable(_table);
   };
 
@@ -25,7 +16,7 @@ function Table({ table = [[]], setTable }) {
       _row.push("");
     }
     _table.push(_row);
-    console.log(_table);
+    // console.log(_table);
     setTable(_table);
   };
 

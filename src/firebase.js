@@ -13,7 +13,7 @@ export const database = {
   formatDocument: (doc) => ({
     id: doc.id,
     ...doc.data(),
-    createdAt: doc.data().createdAt.seconds * 1000,
+    created: doc.data().createdAt.seconds * 1000,
   }),
   getCurrentTimestamp: firebase.firestore.FieldValue.serverTimestamp,
 };

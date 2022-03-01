@@ -56,7 +56,7 @@ function Dashboard() {
                 className="text-decoration-none btn btn-outline-dark m-1"
               >
                 <h6>{item.name}</h6>
-                <small>{new Date(item.createdAt).toDateString()}</small>
+                <small>{new Date(item.created).toDateString()}</small>
               </Link>
             </div>
           ))

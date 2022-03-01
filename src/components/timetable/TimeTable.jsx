@@ -18,11 +18,17 @@ function TimeTable() {
   const [name, setName] = useState("");
   const [table, setTable] = useState([[]]);
 
-  const setInitialData = (_data) => {
-    console.log(_data);
-    setName(_data.name);
-    setTable(_data.TT);
+  const setInitialData = () => {
+    console.log(data);
+    setName(data.name);
+    setTable(data.TT);
   };
+
+  useEffect(() => {
+    if (data) {
+      setInitialData();
+    }
+  }, [data]);
 
   useEffect(() => {
     if (tid) {
@@ -36,7 +42,6 @@ function TimeTable() {
             if (_data.userId === currentUser.uid) {
               _data.TT = JSON.parse(_data.TT).data;
               setData(_data);
-              setInitialData(_data);
             } else {
               throw new Error("Invalid Access!!");
             }
@@ -56,6 +61,40 @@ function TimeTable() {
     }
   }, [tid, currentUser]);
 
+  const handleSaveTT = async () => {
+    // console.log(table);
+    setLoading(true);
+    try {
+      let _data = { ...data };
+      _data.name = name;
+      _data.TT = JSON.stringify({ data: table });
+      delete _data.created;
+      delete _data.id;
+      // console.log(_data);
+      await database.folders().doc(tid).set(_data);
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteTT = async () => {
+    setLoading(true);
+    try {
+      if (window.confirm("Are you sure to delete this TT?")) {
+        await database.folders().doc(tid).delete();
+        history.push("/");
+      }
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -64,7 +103,7 @@ function TimeTable() {
     <div className="row">
       <div className="col-md-12 mx-2 mx-md-auto my-2 my-md-5 rounded bg-light p-3">
         {/* TT-Header */}
-        <div className="mb-2 d-block d-md-flex align-items-center justify-content-between border-bottom">
+        <div className="mb-2 d-block d-md-flex align-self-start justify-content-between border-bottom">
           <div>
             <input
               type="text"
@@ -77,22 +116,28 @@ function TimeTable() {
               <em>
                 <small>
                   <strong>Created On:</strong>{" "}
-                  {new Date(data?.createdAt).toDateString()}
+                  {new Date(data?.created).toDateString()}
                 </small>
               </em>
             </label>
           </div>
-          <div style={{ marginTop: "-10px" }}>
-            <button className="mx-2 btn btn-sm btn-outline-danger">
+          <div>
+            <button
+              className="mx-2 btn btn-sm btn-outline-danger"
+              onClick={handleDeleteTT}
+            >
               Delete
             </button>
             <button
               className="mx-2 btn btn-sm btn-secondary"
-              onClick={() => setInitialData(data)}
+              onClick={setInitialData}
             >
               Cancel
             </button>
-            <button className="mx-2 btn btn-sm btn-success">
+            <button
+              className="mx-2 btn btn-sm btn-success"
+              onClick={handleSaveTT}
+            >
               Save Changes
             </button>
           </div>
