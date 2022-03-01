@@ -38,7 +38,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="mt-5 bg-light p-2 rounded">
+    <div className="m-2 m-md-5 bg-light p-2 rounded">
       <div className="pb-2 border-bottom d-flex align-items-center justify-content-between">
         <div>
           <h3 className="text-info">My Folders</h3>

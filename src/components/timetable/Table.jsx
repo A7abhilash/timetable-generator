@@ -2,20 +2,16 @@ import React from "react";
 import Cell from "./Cell";
 
 function Table({ table = [[]], setTable }) {
-  const handleAddNewCol = () => {
+  const handleDeleteCol = () => {
     let _table = [...table];
-    _table.forEach((row) => row.push(""));
+
     // console.log(_table);
     setTable(_table);
   };
 
-  const handleAddNewRow = () => {
+  const handleDeleteRow = () => {
     let _table = [...table];
-    let _row = [];
-    for (let i = 0; i < table[0].length; i++) {
-      _row.push("");
-    }
-    _table.push(_row);
+
     // console.log(_table);
     setTable(_table);
   };
@@ -41,8 +37,11 @@ function Table({ table = [[]], setTable }) {
               />
             ))}
             <td className="bg-light border-0">
-              <button className="btn btn-sm btn-info" onClick={handleAddNewCol}>
-                New Column
+              <button
+                className="btn btn-sm btn-outline-danger"
+                onClick={handleDeleteRow}
+              >
+                Delete Row
               </button>
             </td>
           </tr>
@@ -66,8 +65,11 @@ function Table({ table = [[]], setTable }) {
           )}
           <tr className="table-borderless">
             <td>
-              <button className="btn btn-sm btn-info" onClick={handleAddNewRow}>
-                New Row
+              <button
+                className="btn btn-sm btn-outline-danger"
+                onClick={handleDeleteCol}
+              >
+                Delete Col
               </button>
             </td>
           </tr>

@@ -15,7 +15,7 @@ function AppRoute() {
   const { currentUser } = useAuth();
 
   return (
-    <div className="container">
+    <div className="container-fluid">
       <Switch>
         {/* TT */}
         <AuthRoute exact path="/" component={Dashboard} />
