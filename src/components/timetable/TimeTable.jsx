@@ -16,7 +16,7 @@ function TimeTable() {
 
   // changes
   const [name, setName] = useState("");
-  const [table, setTable] = useState([[]]);
+  const [table, setTable] = useState([]);
 
   const setInitialData = () => {
     console.log(data);
@@ -32,34 +32,34 @@ function TimeTable() {
 
   useEffect(() => {
     if (tid) {
-      setLoading(true);
-      const getCurrentTT = async () => {
-        try {
-          // get data
-          let doc = await database.folders().doc(tid).get();
-          if (doc.data()) {
-            let _data = database.formatDocument(doc);
-            if (_data.userId === currentUser.uid) {
-              _data.TT = JSON.parse(_data.TT).data;
-              setData(_data);
-            } else {
-              throw new Error("Invalid Access!!");
-            }
-          } else {
-            throw new Error("404 Error!!");
-          }
-        } catch (error) {
-          console.log(error.message);
-          alert(error.message);
-          history.goBack();
-        } finally {
-          setLoading(false);
-        }
-      };
-
       getCurrentTT();
     }
   }, [tid, currentUser]);
+
+  const getCurrentTT = async () => {
+    setLoading(true);
+    try {
+      // get data
+      let doc = await database.folders().doc(tid).get();
+      if (doc.data()) {
+        let _data = database.formatDocument(doc);
+        if (_data.userId === currentUser.uid) {
+          _data.TT = JSON.parse(_data.TT).data;
+          setData(_data);
+        } else {
+          throw new Error("Invalid Access!!");
+        }
+      } else {
+        throw new Error("404 Error!!");
+      }
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+      history.goBack();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSaveTT = async () => {
     // console.log(table);
@@ -72,10 +72,10 @@ function TimeTable() {
       delete _data.id;
       // console.log(_data);
       await database.folders().doc(tid).set(_data);
+      getCurrentTT();
     } catch (error) {
       console.log(error.message);
       alert(error.message);
-    } finally {
       setLoading(false);
     }
   };
@@ -121,8 +121,8 @@ function TimeTable() {
   }
 
   return (
-    <div className="row m-2 m-md-5">
-      <div className="col-md-3">
+    <div className="row m-2 m-md-5 align-items-start">
+      <div className="col-md-3 my-3">
         {/* TT-Header */}
         <div className="pb-2 border-bottom">
           <label>TimeTable Name</label>
@@ -143,11 +143,14 @@ function TimeTable() {
 
         {/* Changes Buttons */}
         <div className="py-2">
-          <button className="btn btn-sm btn-info" onClick={handleAddNewCol}>
+          <button
+            className="btn m-1 btn-block btn-info"
+            onClick={handleAddNewCol}
+          >
             New Column
           </button>
           <button
-            className="btn ml-3 btn-sm btn-info"
+            className="btn m-1 btn-block btn-info"
             onClick={handleAddNewRow}
           >
             New Row
@@ -155,23 +158,37 @@ function TimeTable() {
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-2 border-top">
-          <button className="btn btn-sm btn-danger" onClick={handleDeleteTT}>
+        <div className="py-2 border-top">
+          <button
+            className="btn m-1 btn-block btn-danger"
+            onClick={handleDeleteTT}
+          >
             Delete
           </button>
           <button
-            className="mx-3 btn btn-sm btn-secondary"
+            className="btn m-1 btn-block btn-secondary"
             onClick={setInitialData}
           >
             Cancel
           </button>
-          <button className="btn btn-sm btn-success" onClick={handleSaveTT}>
+          <button
+            className="btn m-1 btn-block btn-success"
+            onClick={handleSaveTT}
+          >
             Save Changes
           </button>
         </div>
+
+        {/* Download */}
+        <div className="pt-2 border-top">
+          <button className="btn btn-primary btn-block">
+            Download TT(PDF)
+          </button>
+        </div>
       </div>
+
+      {/* TT */}
       <div className="col-md-9 rounded bg-light p-3">
-        {/* TT */}
         <Table table={table} setTable={setTable} />
       </div>
     </div>
