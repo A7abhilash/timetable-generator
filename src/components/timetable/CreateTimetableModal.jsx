@@ -1,5 +1,5 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { database } from "../../firebase";
 
@@ -7,7 +7,9 @@ function CreateTimetableModal() {
   const { currentUser } = useAuth();
   const [name, setName] = useState("");
 
-  const handleSubmit = (e) => {
+  const history = useHistory();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name) {
@@ -19,13 +21,14 @@ function CreateTimetableModal() {
       userId: currentUser.uid,
       name,
       createdAt: database.getCurrentTimestamp(),
-      TT: [],
+      TT: JSON.stringify({ data: [["Day\\Time"]] }),
     };
-    console.log(newTT);
+    // console.log(newTT);
 
-    database.folders().add(newTT);
-
+    let doc = await database.folders().add(newTT);
+    // console.log(doc);
     setName("");
+    history.push(`/tt/${doc.id}`);
   };
 
   return (
@@ -71,6 +74,7 @@ function CreateTimetableModal() {
                 placeholder="Year-Class-Section"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                autoFocus
               />
             </div>
             <div className="modal-footer">
@@ -78,6 +82,7 @@ function CreateTimetableModal() {
                 type="button"
                 className="btn btn-secondary"
                 data-dismiss="modal"
+                onClick={() => setName("")}
               >
                 Cancel
               </button>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import CenteredContainer from "../containers/CenteredContainer";
 import Loading from "../containers/Loading";
 import { auth } from "../firebase";
 

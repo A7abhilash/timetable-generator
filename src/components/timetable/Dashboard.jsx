@@ -31,7 +31,7 @@ function Dashboard() {
       }
     };
     getFolders();
-  }, []);
+  }, [currentUser]);
 
   if (loading) {
     return <Loading />;
