@@ -21,7 +21,7 @@ function CreateTimetableModal() {
       userId: currentUser.uid,
       name,
       createdAt: database.getCurrentTimestamp(),
-      TT: JSON.stringify({ data: [["<h3><strong>Day\\Time</strong></h3>"]] }),
+      TT: JSON.stringify({ data: [["<h3>Day\\Time</h3>"]] }),
     };
     // console.log(newTT);
 

@@ -17,9 +17,11 @@ function Dashboard() {
         let res = await database
           .folders()
           .where("userId", "==", currentUser.uid)
-          //   .orderBy("createdAt")
+          // .orderBy("createdAt")
           .get();
-        const data = res.docs.map((doc) => database.formatDocument(doc));
+        const data = res.docs
+          .map((doc) => database.formatDocument(doc))
+          .sort((a, b) => b.created - a.created);
         console.log(data);
         setFolders(data);
         // return data;

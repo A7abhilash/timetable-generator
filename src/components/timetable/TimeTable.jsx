@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import Loading from "../../containers/Loading";
+import printTT from "../../containers/printTT";
 import { useAuth } from "../../contexts/AuthContext";
 import { database } from "../../firebase";
 import Table from "./Table";
@@ -8,6 +9,7 @@ import Table from "./Table";
 function TimeTable() {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [showActionButtons, setShowActionButtons] = useState(true);
   const { tid } = useParams();
   const history = useHistory();
 
@@ -21,7 +23,7 @@ function TimeTable() {
   const setInitialData = () => {
     console.log(data);
     setName(data.name);
-    setTable(data.TT);
+    setTable([...data.TT]);
   };
 
   useEffect(() => {
@@ -116,6 +118,17 @@ function TimeTable() {
     setTable(_table);
   };
 
+  const downloadTT = () => {
+    setShowActionButtons(false);
+
+    setTimeout(() => {
+      let doc = window.document.getElementById("table-gen");
+      printTT(name, doc.innerHTML);
+
+      setShowActionButtons(true);
+    }, 500);
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -181,7 +194,7 @@ function TimeTable() {
 
         {/* Download */}
         <div className="pt-2 border-top">
-          <button className="btn btn-primary btn-block">
+          <button className="btn btn-primary btn-block" onClick={downloadTT}>
             Download TT(PDF)
           </button>
         </div>
@@ -189,7 +202,15 @@ function TimeTable() {
 
       {/* TT */}
       <div className="col-md-9 rounded bg-light p-3">
-        <Table table={table} setTable={setTable} />
+        <Table
+          table={table}
+          setTable={setTable}
+          showActionButtons={showActionButtons}
+        />
+
+        <p className="text-danger">
+          <small>*Make sure to save changes before u leave</small>
+        </p>
       </div>
     </div>
   );

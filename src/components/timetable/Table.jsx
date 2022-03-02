@@ -1,7 +1,7 @@
 import React from "react";
 import Cell from "./Cell";
 
-function Table({ table = [], setTable }) {
+function Table({ table = [], setTable, showActionButtons }) {
   const handleDeleteCol = (index) => {
     let _table = table.map((row) => row.filter((_, i) => i !== index));
 
@@ -17,13 +17,19 @@ function Table({ table = [], setTable }) {
   };
 
   const setCellValue = (row, col, text) => {
-    let _table = [...table];
+    // let _table = [...table];
+    let _table = [];
+    table.forEach((_row) => {
+      let __row = [..._row];
+      _table.push(__row);
+    });
+    // console.log(_table);
     _table[row][col] = text;
     setTable(_table);
   };
 
   return (
-    <div className="table-responsive">
+    <div className="table-responsive" id="table-gen">
       <table className="table table-bordered">
         {/* Head */}
         <thead>
@@ -54,34 +60,38 @@ function Table({ table = [], setTable }) {
                       setValue={(text) => setCellValue(index, i, text)}
                     />
                   ))}
-                  <td className="bg-light border-0">
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => handleDeleteRow(index)}
-                    >
-                      Delete Row
-                    </button>
-                  </td>
+                  {showActionButtons && (
+                    <td className="bg-light border-0">
+                      <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => handleDeleteRow(index)}
+                      >
+                        Delete Row
+                      </button>
+                    </td>
+                  )}
                 </tr>
               )
           )}
 
-          <tr className="table-borderless">
-            {table[0].map((_, index) => (
-              <td key={`Delete-col-${index}`}>
-                {index !== 0 ? (
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleDeleteCol(index)}
-                  >
-                    Delete Column
-                  </button>
-                ) : (
-                  ""
-                )}
-              </td>
-            ))}
-          </tr>
+          {showActionButtons && (
+            <tr className="table-borderless">
+              {table[0].map((_, index) => (
+                <td key={`Delete-col-${index}`}>
+                  {index !== 0 ? (
+                    <button
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => handleDeleteCol(index)}
+                    >
+                      Delete Column
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </td>
+              ))}
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
