@@ -40,31 +40,35 @@ function Dashboard() {
   }
 
   return (
-    <div className="m-2 m-md-5 bg-light p-2 rounded">
-      <div className="pb-2 border-bottom d-flex align-items-center justify-content-between">
-        <div>
-          <h3 className="text-info">My Folders</h3>
-        </div>
-        <div>
-          <CreateTimetableModal />
-        </div>
-      </div>
-      <div className="my-2 d-flex flex-wrap">
-        {folders.length ? (
-          folders.map((item) => (
-            <div key={item.id}>
-              <Link
-                to={`/tt/${item.id}`}
-                className="text-decoration-none btn btn-outline-dark m-1"
-              >
-                <h6>{item.name}</h6>
-                <small>{new Date(item.created).toDateString()}</small>
-              </Link>
+    <div className="row">
+      <div className="col-md-8 mx-2 mx-md-auto">
+        <div className="m-2 m-md-5 bg-light p-2 rounded">
+          <div className="pb-2 border-bottom d-flex align-items-center justify-content-between">
+            <div>
+              <h3 className="text-info">My Folders</h3>
             </div>
-          ))
-        ) : (
-          <p className="small">No timetable created!</p>
-        )}
+            <div>
+              <CreateTimetableModal />
+            </div>
+          </div>
+          <div className="my-2 d-flex flex-wrap">
+            {folders.length ? (
+              folders.map((item) => (
+                <div key={item.id}>
+                  <Link
+                    to={`/tt/${item.id}`}
+                    className="text-decoration-none btn btn-outline-dark m-1"
+                  >
+                    <h6>{item.name}</h6>
+                    <small>{new Date(item.created).toDateString()}</small>
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <p className="small">No timetable created!</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
